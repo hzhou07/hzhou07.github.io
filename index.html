@@ -27,7 +27,7 @@ padding: 8px 16px;
 }
 
 nav li a.active {
-  background-color: #4CAF50;
+  background-color: #00d2ff;
 color: white;
 }
 
@@ -43,23 +43,27 @@ color: white;
 <nav>
 <ul class="">
 <li><a class="active" href="index.html">Home</a></li>
+<li><a href="#Education">Education</a></li>
 <li><a href="#Research">Research</a></li>
+<li><a href="#Teaching">Teaching</a></li>
+<li><a href="#ActAndHonor>Teaching</a></li>
 <li><a href="#Software">Software</a></li>
 <li><a href="#Industry">Industry</a></li>
-<li><a href="blog.html">Technical Blog</a></li>
+<!-- <li><a href="blog">My Blogs</a></li> -->
 </ul>
 </nav>
 <div style="margin-left:25%;padding:1px 16px;height:1000px;">
 <table CELLSPACING=5 CELLPADDING=0 border=0 width=85%>
 <tr>
   <td align=left>
-  <img SRC="self.jpg?imageMogr2/auto-orient" width=200 align=LEFT border=0>
+  <img SRC="self.jpg" width=200 align=LEFT border=0>
   </td>
   <td rowspan="1"> 
     <h1><font>Hao Zhou</font></h1>
   <dl>
-    <dt> <b><font>Undergraduate Student of Computer Science <!--(<a href="2018.pdf" style="color:#4CAF50">CV</a>)--> </font></b>
-    <dt> <b><font>Advisor: <!-- <a href="http://tristartom.github.io" style="color:green">Dr. Yuzhe Tang</a>--></font></b>
+    <dt> <b><font>Senior student in Computer Science (<a href="2018.pdf" style="color:#00d2ff">CV</a>)</font></b>
+    <dt> <b><font>Research Advisor: <a href="http://tristartom.github.io" style="color:#000000">Dr. Yuzhe Tang</a></font></b>
+    <dt> <b><font>Academic Advisor: <a href= style="color:#000000">Dr. James S. Royer</a></font></b>
     <font>
     <p>
       <dt><a href="http://www.ecs.syr.edu" style="color:#000000">Department of EECS</a> 
@@ -71,29 +75,61 @@ color: white;
     </font>
     </dl>
     </td>
+  <td>
+  <img SRC="syracuse.jpg" width=80 align=top-right border=0>
+  <img SRC="beihang.jpg" width=80 align=top-right border=0>
+  </td>
 </tr>
 
 <tr id="Short Bio">
    <td colspan=2>
 <hr>
 <b>Short Bio:</b>
-I am a Senior student of Computer Science. I am looking for jobs now. 
+I am a senior undergraduate student in Computer Science. 
 </td>
 <tr>
 
+<tr id="Education">
+   <td colspan=2>
+<hr>
+<b>Education</b>
+<ul>
+  <li>Research Interests: Trusted Execution Environment (e.g. Intel SGX) and Blockchain</li>
+  <li>Projects:
+    <ul>
+      <li>Authenticated Cloud Storage With Minimal Trust Using Intel SGX</li>
+      <li>Data-oblivious query processing using Intel SGX</li>
+      <li>Secure multi-party databases</li>
+    </ul>
+  </li>
+</ul>
+</td>
+<tr>
+  
 <tr id="Research">
    <td colspan=2>
 <hr>
 <b>Research</b>
 <ul>
-<li>Research Interests: TBD</li>
+<li>Research Interests: Trusted Execution Environment (e.g. Intel SGX) and Blockchain</li>
 <li>Projects:
 <ul>
-<li>TBD</li>
-<li>TBD</li>
-<li>TBD</li>
+<li>Authenticated Cloud Storage With Minimal Trust Using Intel SGX</li>
+<li>Data-oblivious query processing using Intel SGX</li>
+<li>Secure multi-party databases</li>
 </ul>
 </li>
+</ul>
+</td>
+<tr>
+
+<tr id="Teaching">
+   <td colspan=2>
+<hr>
+<b>Teaching</b>
+<ul>
+<li>2017 Spring: CIS655/CSE699, Advanced Computer Architecture</li>
+<li>2018 Fall: CIS600/FIN600, Blockchain and Cryptocurrency</li>
 </ul>
 </td>
 <tr>
@@ -104,27 +140,36 @@ I am a Senior student of Computer Science. I am looking for jobs now.
 <hr>
 <b>Publication</b>
 <ul>
-<li>
-Ju Chen, Yuzhe (Richard) Tang, <b>Hao Zhou</b>. "Strongly Secure and Efficient Data Shuffle on Hardware Enclaves", <b>SysTex 2017</b> at ACM SOSP (Workshop paper), [<a href="https://dl.acm.org/citation.cfm?doid=3152701.3152708">PDF (ACM)</a>, <a href="https://arxiv.org/abs/1711.04243">PDF (Full Report on arXiv)</a>,<a href="./systex17-final8.pdf">pdf</a>]
-</li>
-<li>
-TBD<!--John Ye, <b>Jason Chen</b>, Tianzhou Chen and Qinsong Shi, ”Conflict-Free Code Block Scheduling to Hide SpMT Inter-Core Register Sync Delay”, PDCAT ’14 [<a href="" style="color:green"></a>]-->
-</li>
 
+
+
+<li>
+<b>Ju Chen</b>, Yuzhe (Richard) Tang and Hao Zhou. ”Strongly Secure and Efficient Data Shuffle on Hardware Enclaves”, SysTex 2017 at ACM SOSP (Workshop paper) 
+</li>
 
 
 </ul>
 </td>
 <tr>
 
+<tr id="ActAndHonor">
+  <td colspan=2>
+<hr>
+<b>Activities and Honors</b>
+<ul>
+<li>iDash 2017 Student Travel Grant</li>
+<li>Conference (sub)reviewer: TKDE, ICPADS, TDSCSI, IPDPS and IEEE cloud
+</ul>
+</td>
+<tr>
 
 <tr id="Software">
    <td colspan=2>
 <hr>
 <b>Software</b>
 <ul>
-<li>TBD<!--2016: Trustworthy key-value store based on LevelDB using SGX--></li>
-<li>TBD<!--2015: Intel SGX emulator (<a href="https://github.com/tristartom/sgx-emulator" style="color:#4CAF50">GitHub repo</a>)--></li>
+  
+<li>2016: Trustworthy key-value store based on LevelDB using SGX</li>
 
 </ul>
 </td>
@@ -135,8 +180,8 @@ TBD<!--John Ye, <b>Jason Chen</b>, Tianzhou Chen and Qinsong Shi, ”Conflict-Fr
 <hr>
 <b>Industry</b>
 <ul>
-<li>TBD<!--2008-2015: Software Engineer, <a href="http://www.intel.com/content/www/us/en/jobs/locations/china/sites/beijing.html" style="color:#4CAF50">Intel Corporation, Beijing, China</a>--> </li>
-<li>TBD<!--2007: Software Engineer Intern, <a href="http://www.agilent.com/home" style="color:#4CAF50">Agilent Technologies, Beijing, China</a>--> </li>
+<li>2008-2015: Software Engineer, <a href="http://www.intel.com/content/www/us/en/jobs/locations/china/sites/beijing.html" style="color:#D44500">Intel Corporation, Beijing, China</a></li>
+<li>2007: Software Engineer Intern, <a href="http://www.agilent.com/home" style="color:#D44500">Agilent Technologies, Beijing, China</a></li>
 </ul>
 </td>
 <tr>
