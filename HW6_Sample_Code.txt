@@ -1,0 +1,550 @@
+#include <iostream>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+#include <fstream>
+using namespace std;
+ofstream out("data1.txt");
+
+class bucket {
+public:
+	int a;
+	int b;
+	int c;
+	int d;
+	bucket() { a = b = c = d = 0; }
+	void part_random(int i);
+	void product_random(int i);
+	bool isEmpty() { return ((a == 0) && (b == 0) && (c == 0) && (d == 0)); }
+	bool isFull() { return (a == 6) && (b == 5) && (c == 4) && (d == 3); }
+	bool isEqual(bucket B) { return ((a == B.a) && (b == B.b) && (c == B.c) && (d == B.d)); }
+	bucket operator+(bucket B);
+	friend ostream & operator<<(ostream &stream, const bucket &B);
+};
+
+bucket bucket::operator+(bucket B) {
+	bucket temp;
+	temp.a = a + B.a;
+	temp.b = b + B.b;
+	temp.c = c + B.c;
+	temp.d = d + B.d;
+	return temp;
+}
+
+ostream &operator<<(ostream &stream, const bucket &B) {
+	stream << "(" << B.a << "," << B.b << "," << B.c << "," << B.d << ")";
+	return stream;
+}
+
+
+mutex m1;
+condition_variable cv1, cv2;
+int seed = 10;
+bucket buffer;
+
+
+atomic_int BlockedCount = 0;
+atomic_int cv1_SleepCount = 0;
+atomic_int cv2_SleepCount = 0;
+
+
+void bucket::part_random(int i) {
+	switch (i) {
+	case 0:
+		a = 3;
+		b = 0;
+		c = 0;
+		d = 0;
+		break;
+	case 1:
+		a = 0;
+		b = 3;
+		c = 0;
+		d = 0;
+		break;
+	case 2:
+		a = 0;
+		b = 0;
+		c = 3;
+		d = 0;
+		break;
+	case 3:
+		a = 0;
+		b = 0;
+		c = 0;
+		d = 3;
+		break;
+	case 4:
+		a = 1;
+		b = 2;
+		c = 0;
+		d = 0;
+		break;
+	case 5:
+		a = 1;
+		b = 0;
+		c = 2;
+		d = 0;
+		break;
+	case 6:
+		a = 1;
+		b = 0;
+		c = 0;
+		d = 2;
+		break;
+	case 7:
+		a = 2;
+		b = 1;
+		c = 0;
+		d = 0;
+		break;
+	case 8:
+		a = 0;
+		b = 1;
+		c = 2;
+		d = 0;
+		break;
+	case 9:
+		a = 0;
+		b = 1;
+		c = 0;
+		d = 2;
+		break;
+	case 10:
+		a = 2;
+		b = 0;
+		c = 1;
+		d = 0;
+		break;
+	case 11:
+		a = 0;
+		b = 2;
+		c = 1;
+		d = 0;
+		break;
+	case 12:
+		a = 0;
+		b = 0;
+		c = 1;
+		d = 2;
+		break;
+	case 13:
+		a = 2;
+		b = 0;
+		c = 0;
+		d = 1;
+		break;
+	case 14:
+		a = 0;
+		b = 2;
+		c = 0;
+		d = 1;
+		break;
+	case 15:
+		a = 0;
+		b = 0;
+		c = 2;
+		d = 1;
+		break;
+	case 16:
+		a = 0;
+		b = 1;
+		c = 1;
+		d = 1;
+		break;
+	case 17:
+		a = 1;
+		b = 0;
+		c = 1;
+		d = 1;
+		break;
+	case 18:
+		a = 1;
+		b = 1;
+		c = 0;
+		d = 1;
+		break;
+	case 19:
+		a = 1;
+		b = 1;
+		c = 1;
+		d = 0;
+		break;
+	}
+}
+
+void bucket::product_random(int i) {
+	switch (i) {
+	case 0:
+		a = 1;
+		b = 3;
+		c = 0;
+		d = 0;
+		break;
+	case 1:
+		a = 2;
+		b = 2;
+		c = 0;
+		d = 0;
+		break;
+	case 2:
+		a = 3;
+		b = 1;
+		c = 3;
+		d = 0;
+		break;
+	case 3:
+		a = 1;
+		b = 0;
+		c = 3;
+		d = 0;
+		break;
+	case 4:
+		a = 2;
+		b = 0;
+		c = 2;
+		d = 0;
+		break;
+	case 5:
+		a = 3;
+		b = 0;
+		c = 1;
+		d = 0;
+		break;
+	case 6:
+		a = 1;
+		b = 0;
+		c = 0;
+		d = 3;
+		break;
+	case 7:
+		a = 2;
+		b = 0;
+		c = 0;
+		d = 2;
+		break;
+	case 8:
+		a = 3;
+		b = 0;
+		c = 0;
+		d = 1;
+		break;
+	case 9:
+		a = 0;
+		b = 1;
+		c = 3;
+		d = 0;
+		break;
+	case 10:
+		a = 0;
+		b = 2;
+		c = 2;
+		d = 0;
+		break;
+	case 11:
+		a = 0;
+		b = 3;
+		c = 1;
+		d = 0;
+		break;
+	case 12:
+		a = 0;
+		b = 1;
+		c = 0;
+		d = 3;
+		break;
+	case 13:
+		a = 0;
+		b = 2;
+		c = 0;
+		d = 2;
+		break;
+	case 14:
+		a = 0;
+		b = 3;
+		c = 0;
+		d = 1;
+		break;
+	case 15:
+		a = 0;
+		b = 0;
+		c = 1;
+		d = 3;
+		break;
+	case 16:
+		a = 0;
+		b = 0;
+		c = 2;
+		d = 2;
+		break;
+	case 17:
+		a = 0;
+		b = 0;
+		c = 3;
+		d = 1;
+		break;
+	}
+}
+
+
+void PartWorker(int i) {
+	int run = 5;
+	while (run > 0) {
+		int trycount = 0;
+		bucket place_req;
+		srand(seed++);
+		place_req.part_random(rand() % 20); // generate random request
+
+		BlockedCount++;
+		unique_lock<mutex> ulock1(m1);
+		//cout << "PartWorker " << i << " get the mutex" << endl;
+		BlockedCount--;
+		while (!place_req.isEmpty()) {
+			out << endl;
+			out << "Part Worker ID: " << i << endl;
+			out << "Iteration: " << 6 - run << endl;
+			out << "Buffer State: " << buffer << endl;
+			out << "Place Request: " << place_req << endl;
+
+			//try to put things into buffer,update buffer and request
+			bucket temp = place_req;
+
+			//update a
+			if (buffer.a + temp.a > 6) {
+				temp.a = temp.a - (6 - buffer.a);
+				buffer.a = 6;
+			}
+			else {
+				buffer.a = buffer.a + temp.a;
+				temp.a = 0;
+			}
+
+			//update b
+			if (buffer.b + temp.b > 5) {
+				temp.b = temp.b - (5 - buffer.a);
+				buffer.b = 5;
+			}
+			else {
+				buffer.b = buffer.b + temp.b;
+				temp.b = 0;
+			}
+
+			//update c
+			if (buffer.c + temp.c > 4) {
+				temp.c = temp.c - (4 - buffer.c);
+				buffer.c = 4;
+			}
+			else {
+				buffer.c = buffer.c + temp.c;
+				temp.c = 0;
+			}
+
+			//update d
+			if (buffer.d + temp.d > 3) {
+				temp.d = temp.d - (3 - buffer.d);
+				buffer.d = 3;
+			}
+			else {
+				buffer.d = buffer.d + temp.d;
+				temp.d = 0;
+			}
+
+			place_req = temp;
+
+			// print updated request and updated buffer
+			out << "Updated buffer State: " << buffer << endl;
+			out << "Updated Place Request: " << place_req << endl;
+
+			if (!place_req.isEmpty()) {
+				// increase the unchangecount, for deadlock detecting
+				trycount++;
+				// if try too many times,thread will return
+				if (trycount > 25) {
+					cv2.notify_one();
+					ulock1.unlock();
+					out << "Return" << endl;
+					return;
+				}
+				//cout << "Blockedcount =" << BlockedCount << ", Product Sleepcount = " << cv2_SleepCount << endl;
+				if (BlockedCount > cv2_SleepCount) {
+					//cout << "More blocked thread, unlock" << endl;
+				}
+				else {
+					//cout << "More sleep thread, notify sleep product" << endl;
+					cv2.notify_one();
+				}
+
+				cv1_SleepCount++;
+				//cout << "incomplete , go sleep " << cv1_SleepCount << endl;
+				if (!place_req.isEmpty()) cv1.wait(ulock1);
+				//cout << "part worker " << i <<" wake up" << endl;
+				if (BlockedCount == 0 && cv2_SleepCount == 0) {
+					cv1.notify_one();
+					out << endl;
+					out << "Part Worker ID: " << i << endl;
+					out << "Iteration: " << 6 - run << endl;
+					out << "Buffer State: " << buffer << endl;
+					out << "Place Request: " << place_req << endl;
+					out << "Updated buffer State: " << buffer << endl;
+					out << "Updated Place Request: " << place_req << endl;
+					out << "Return" << endl;
+					//cout << "Return" << endl;
+					return;
+				}
+				cv1_SleepCount--;
+			}
+
+		}
+
+		run--;
+
+	}
+
+	cv1.notify_one();
+
+}
+
+void ProductWorker(int i) {
+	int run = 5;
+	while (run > 0) {
+		int trycount = 0;
+		bucket pickup_req;
+		srand(seed++);
+		pickup_req.product_random(rand() % 18); // generate random request
+		BlockedCount++;
+		unique_lock<mutex> ulock1(m1);
+		//cout << "ProductWorker " << i << " get the mutex" << endl;
+		BlockedCount--;
+		while (!pickup_req.isEmpty()) {
+
+			out << endl;
+			out << "Product Worker ID: " << i << endl;
+			out << "Iteration: " << 6 - run << endl;
+			out << "Buffer State: " << buffer << endl;
+			out << "Pickup Request: " << pickup_req << endl;
+
+			//try to get things from buffer,update buffer and request
+			bucket temp = pickup_req;
+
+			//update a
+			if (buffer.a < temp.a) {
+				temp.a = temp.a - buffer.a;
+				buffer.a = 0;
+			}
+			else {
+				buffer.a = buffer.a - temp.a;
+				temp.a = 0;
+			}
+
+			//update b
+			if (buffer.b < temp.b) {
+				temp.b = temp.b - buffer.b;
+				buffer.b = 0;
+			}
+			else {
+				buffer.b = buffer.b - temp.b;
+				temp.b = 0;
+			}
+
+			//update c
+			if (buffer.c < temp.c) {
+				temp.c = temp.c - buffer.c;
+				buffer.c = 0;
+			}
+			else {
+				buffer.c = buffer.c - temp.c;
+				temp.c = 0;
+			}
+
+			//update d
+			if (buffer.d < temp.d) {
+				temp.d = temp.d - buffer.d;
+				buffer.d = 0;
+			}
+			else {
+				buffer.d = buffer.d - temp.d;
+				temp.d = 0;
+			}
+
+			pickup_req = temp;
+
+			// print updated request and updated buffer
+			out << "Updated buffer State: " << buffer << endl;
+			out << "Updated Pickup Request: " << pickup_req << endl;
+
+			if (!pickup_req.isEmpty()) {
+				// increase the unchangecount, for deadlock detecting
+				trycount++;
+				// if try too many times,thread will return
+				if (trycount > 25) {
+					cv1.notify_one();
+					ulock1.unlock();
+					out << "Return" << endl;
+					return;
+				}
+				//cout << "Blockedcount =" << BlockedCount << ", Part Sleepcount = " << cv1_SleepCount << endl;
+				if (BlockedCount > cv1_SleepCount)
+				{
+					//cout << "More blocked thread, unlock" << endl;
+				}
+				else {
+					//cout << "More sleep thread, notify sleeping part" << endl;
+					cv1.notify_one();
+				}
+
+				cv2_SleepCount++;
+				//cout << "incomplete , go sleep " << cv2_SleepCount << endl;
+				if (!pickup_req.isEmpty()) cv2.wait(ulock1);
+				if (BlockedCount == 0 && cv1_SleepCount == 0) {
+					cv2.notify_one();
+					out << endl;
+					out << "Product Worker ID: " << i << endl;
+					out << "Iteration: " << 6 - run << endl;
+					out << "Buffer State: " << buffer << endl;
+					out << "Pickup Request: " << pickup_req << endl;
+					out << "Updated buffer State: " << buffer << endl;
+					out << "Updated Pickup Request: " << pickup_req << endl;
+					out << "Return" << endl;
+					return;
+				}
+				//cout << "product worker " << i << " wake up" << endl;
+				cv2_SleepCount--;
+
+			}
+
+		}
+
+		run--;
+
+	}
+	cv2.notify_one();
+}
+
+
+
+
+int main() {
+	const int m = 16, n = 12; //m: number of Part Workers
+							  //n: number of Product Workers
+	thread partW[m];
+	thread prodW[n];
+	for (int i = 0; i < n; i++) {
+		partW[i] = thread(PartWorker, i);
+		prodW[i] = thread(ProductWorker, i);
+	}
+	for (int i = n; i<m; i++) {
+		partW[i] = thread(PartWorker, i);
+	}
+	/* Join the threads to the main threads */
+	for (int i = 0; i < n; i++) {
+		partW[i].join();
+		prodW[i].join();
+	}
+	for (int i = n; i<m; i++) {
+		partW[i].join();
+	}
+	cout << "Finish!" << endl;
+	getchar();
+	getchar();
+	return 0;
+}
